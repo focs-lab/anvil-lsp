@@ -28,6 +28,7 @@ export class AnvilLspUtils {
 
   static lspRangeToAnvilSpan(range: Range): AnvilSpan {
     return {
+      file_name: null,
       start: this.lspPosToAnvilPos(range.start),
       end: this.lspPosToAnvilPos(range.end),
     };

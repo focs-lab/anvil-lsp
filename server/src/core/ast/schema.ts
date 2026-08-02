@@ -5,7 +5,7 @@ import { isAstSchemaVersionCompatible } from './utils';
 // SCHEMA VERSIONING AND VALIDATION
 //
 
-export const REQUIRED_AST_SCHEMA_VERSION = 'v0.1.0-wip.2';
+export const REQUIRED_AST_SCHEMA_VERSION = 'v0.1.0-wip.3';
 
 const AnvilAstSchemaVersionStringSchema = z
   .string()
@@ -82,24 +82,15 @@ export const AnvilPositionSchema = z.looseObject({
 export type AnvilPosition = z.infer<typeof AnvilPositionSchema>;
 
 /**
- * A span with a start and end position. Matches code_span_to_yojson: { start, end }
+ * A source span with its file name and start/end positions.
+ * Matches code_span_to_yojson: { file_name, start, end }
  */
 export const AnvilSpanSchema = z.looseObject({
+  file_name: z.string().nullable(),
   start: AnvilPositionSchema,
   end: AnvilPositionSchema,
 });
 export type AnvilSpan = z.infer<typeof AnvilSpanSchema>;
-
-/**
- * A span that also carries an optional file_name (used in def_span entries).
- * Matches def_span_to_yojson: { file_name, start, end }
- */
-export const AnvilDefSpanSchema = z.looseObject({
-  file_name: z.string().nullable().optional(),
-  start: AnvilPositionSchema,
-  end: AnvilPositionSchema,
-});
-export type AnvilDefSpan = z.infer<typeof AnvilDefSpanSchema>;
 
 /**
  * After AnvilAstNode::deepFlattenNode during init, every ast_node wrapper is merged
@@ -114,7 +105,7 @@ export type AnvilDefSpan = z.infer<typeof AnvilDefSpanSchema>;
 export const AnvilSpannableSchema = z.looseObject({
   kind: z.string().optional(),
   span: AnvilSpanSchema,
-  def_span: z.array(AnvilDefSpanSchema).optional(),
+  def_span: z.array(AnvilSpanSchema).optional(),
   event: z
     .looseObject({
       tid: z.number().int(),
@@ -416,7 +407,7 @@ export type AnvilMessageDef = z.infer<typeof AnvilMessageDefSchema>;
 
 //
 // CHANNEL_CLASS_DEF
-// { kind: "channel_class_def", name, messages, params, span, file_name }
+// { kind: "channel_class_def", name, messages, params, span }
 //
 
 export const AnvilChannelClassSchema = z.looseObject({
@@ -425,13 +416,12 @@ export const AnvilChannelClassSchema = z.looseObject({
   messages: z.array(AnvilMessageDefSchema),
   params: z.array(AnvilParamSchema),
   span: AnvilSpanSchema,
-  file_name: z.string().nullable().optional(),
 });
 export type AnvilChannelClass = z.infer<typeof AnvilChannelClassSchema>;
 
 //
 // TYPE_DEF
-// { kind: "type_def", name, data_type, params, span, file_name }
+// { kind: "type_def", name, data_type, params, span }
 //
 
 export const AnvilTypeSchema = z.looseObject({
@@ -440,13 +430,12 @@ export const AnvilTypeSchema = z.looseObject({
   data_type: AnvilDataTypeSchema,
   params: z.array(AnvilParamSchema),
   span: AnvilSpanSchema,
-  file_name: z.string().nullable().optional(),
 });
 export type AnvilType = z.infer<typeof AnvilTypeSchema>;
 
 //
 // MACRO_DEF
-// { kind: "macro_def", id, value, span, file_name }
+// { kind: "macro_def", id, value, span }
 //
 
 export const AnvilMacroSchema = z.looseObject({
@@ -454,7 +443,6 @@ export const AnvilMacroSchema = z.looseObject({
   id: z.string(),
   value: z.number().int(),
   span: AnvilSpanSchema,
-  file_name: z.string().nullable().optional(),
 });
 export type AnvilMacro = z.infer<typeof AnvilMacroSchema>;
 
@@ -473,7 +461,7 @@ export type AnvilTypedArg = z.infer<typeof AnvilTypedArgSchema>;
 
 //
 // FUNC_DEF
-// { kind: "func_def", name, args, body (flattened expr_node), span, file_name }
+// { kind: "func_def", name, args, body (flattened expr_node), span }
 //
 
 export const AnvilFuncSchema = z.looseObject({
@@ -482,7 +470,6 @@ export const AnvilFuncSchema = z.looseObject({
   args: z.array(AnvilTypedArgSchema),
   body: AnvilSpannableSchema, // flattened ast_node wrapping an expr
   span: AnvilSpanSchema,
-  file_name: z.string().nullable().optional(),
 });
 export type AnvilFunc = z.infer<typeof AnvilFuncSchema>;
 
@@ -649,7 +636,7 @@ export type AnvilProcBody = z.infer<typeof AnvilProcBodySchema>;
 
 //
 // PROC_DEF
-// { kind: "proc_def", name, args, body, params, span, file_name }
+// { kind: "proc_def", name, args, body, params, span }
 //
 
 export const AnvilProcSchema = z.looseObject({
@@ -659,7 +646,6 @@ export const AnvilProcSchema = z.looseObject({
   body: AnvilProcBodySchema,
   params: z.array(AnvilParamSchema),
   span: AnvilSpanSchema,
-  file_name: z.string().nullable().optional(),
 });
 export type AnvilProc = z.infer<typeof AnvilProcSchema>;
 

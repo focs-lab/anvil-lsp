@@ -174,6 +174,7 @@ export class AnvilCompiler {
             type: 'error',
             filepath: '',
             span: {
+              file_name: null,
               start: { line: 1, col: 0 },
               end: { line: 1, col: Number.MAX_VALUE },
             },
@@ -229,6 +230,7 @@ export class AnvilCompiler {
               type: 'error',
               filepath: '',
               span: {
+                file_name: null,
                 start: { line: 1, col: 0 },
                 end: { line: 1, col: Number.MAX_VALUE },
               },
@@ -257,6 +259,7 @@ export class AnvilCompiler {
               type: 'error',
               filepath: '',
               span: {
+                file_name: null,
                 start: { line: 1, col: 0 },
                 end: { line: 1, col: Number.MAX_VALUE },
               },
@@ -277,6 +280,7 @@ export class AnvilCompiler {
             type: 'error',
             filepath: '',
             span: {
+              file_name: null,
               start: { line: 1, col: 0 },
               end: { line: 1, col: Number.MAX_VALUE },
             },
@@ -399,6 +403,7 @@ export class AnvilCompiler {
               supplementaryInfo.push({
                 filepath: fragment.path || filepath,
                 span: {
+                  file_name: fragment.path || filepath || null,
                   start: fragment.trace.start,
                   end: fragment.trace.end,
                 },
@@ -414,6 +419,7 @@ export class AnvilCompiler {
         type: error.type,
         filepath,
         span: {
+          file_name: filepath || null,
           start: { line: startLine, col: startCol },
           end: { line: endLine, col: endCol },
         },

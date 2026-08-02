@@ -98,6 +98,20 @@ describe('AnvilCompiler', () => {
       'Expected compilation to succeed',
     );
     assert.strictEqual(importResult.errors.length, 0, 'Expected no errors');
+    assert.ok(importResult.ast, 'Expected parsed AST output');
+
+    const root = importResult.ast.root('samples/import.anvil');
+    assert.ok(root, 'Expected root AST node for imported sample');
+
+    const proc = root.down('procs').down(0).resolve();
+    assert.strictEqual(proc?.span.file_name, 'samples/import.anvil');
+    assert.ok(proc && !('file_name' in proc));
+
+    const spawn = root.unsafeTraverse('procs', 0, 'body', 'spawns', 0);
+    assert.strictEqual(
+      spawn.definition?.filepath,
+      'samples/pipeline/Alu.anvil',
+    );
   });
 
   it('should compile the simple lsp test file successfully', async () => {

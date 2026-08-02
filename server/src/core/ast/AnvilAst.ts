@@ -3,7 +3,6 @@ import { z } from 'zod';
 
 import {
   AnvilSpanSchema,
-  AnvilDefSpanSchema,
   AnvilSpannableSchema,
   AnvilCompUnitSchema,
   type AnvilSpan,
@@ -25,7 +24,7 @@ export class AnvilAbsoluteSpan {
 
   constructor(basepath: string, filepath: string, span: AnvilSpan) {
     this.basepath = basepath;
-    this.filepath = filepath;
+    this.filepath = span.file_name || filepath;
 
     if (this.filepath.startsWith('/')) {
       this.filepath = path.relative(this.basepath, this.filepath);
@@ -774,15 +773,9 @@ export class AnvilAstNode<T = any, U extends AnvilAstNode | unknown = unknown> {
    */
   get definitions(): AnvilAbsoluteSpan[] {
     const defSpan =
-      this.unsafeTraverse('def_span').resolveAs(AnvilDefSpanSchema.array()) ??
-      [];
+      this.unsafeTraverse('def_span').resolveAs(AnvilSpanSchema.array()) ?? [];
     return defSpan.map(
-      (d) =>
-        new AnvilAbsoluteSpan(
-          this._fsBasepath,
-          d.file_name || this.filepath,
-          d,
-        ),
+      (d) => new AnvilAbsoluteSpan(this._fsBasepath, this.filepath, d),
     );
   }
 
@@ -1219,11 +1212,7 @@ export class AnvilAst {
         // Populate reference index for reverse definition lookup
         const defSpans = spannable.def_span ?? [];
         for (const defSpan of defSpans) {
-          const defLocation = new AnvilAbsoluteSpan(
-            fbasepath,
-            defSpan.file_name || fpath,
-            defSpan,
-          );
+          const defLocation = new AnvilAbsoluteSpan(fbasepath, fpath, defSpan);
           const defLocId = defLocation.id();
           if (!this.referenceIndex.has(defLocId)) {
             this.referenceIndex.set(defLocId, []);
