@@ -5,7 +5,7 @@ import { isAstSchemaVersionCompatible } from './utils';
 // SCHEMA VERSIONING AND VALIDATION
 //
 
-export const REQUIRED_AST_SCHEMA_VERSION = 'v0.1.0-wip.3';
+export const REQUIRED_AST_SCHEMA_VERSION = 'v0.1.0';
 
 const AnvilAstSchemaVersionStringSchema = z
   .string()
