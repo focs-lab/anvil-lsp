@@ -69,7 +69,7 @@ Available extensions for supported editors are included in the `extensions` fold
 
 1. Clone this repository, and build the extension:
     ```bash
-    git clone https://github.com/wxwern/anvil-lsp.git
+    git clone https://github.com/focs-lab/anvil-lsp.git
     cd anvil-lsp/extensions/vscode
     npm install
     npm run build
@@ -93,7 +93,7 @@ For example, with `vim-plug`:
 
 1. Add the following to your `.vimrc` or `init.vim`:
     ```vim
-    Plug 'wxwern/anvil-lsp', {
+    Plug 'focs-lab/anvil-lsp', {
         \ 'rtp': 'extensions/vim',
         \ 'do': 'cd extensions/vim && npm install && npm run build'
         \ }
@@ -110,7 +110,7 @@ If you prefer to manage it manually (still requires `coc.nvim`):
 
 1. Clone this repository, and build the extension:
     ```bash
-    git clone https://github.com/wxwern/anvil-lsp.git
+    git clone https://github.com/focs-lab/anvil-lsp.git
     cd anvil-lsp/extensions/vim
     npm install
     npm run build
@@ -133,7 +133,7 @@ This repository includes a submodule of Anvil, pinned to a version with guarante
 
 1. Clone the repository with submodules:
     ```bash
-    git clone --recurse-submodules https://github.com/wxwern/anvil-lsp.git
+    git clone --recurse-submodules https://github.com/focs-lab/anvil-lsp.git
     ```
 
    If you have already cloned it without submodules, you can retrieve submodules like so:
